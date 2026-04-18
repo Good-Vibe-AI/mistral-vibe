@@ -57,7 +57,17 @@ class AgentProfile:
     def apply_to_config(self, base: VibeConfig) -> VibeConfig:
         from vibe.core.config import VibeConfig as VC
 
-        merged = _deep_merge(base.model_dump(), self.overrides)
+        merged = _deep_merge(
+            base.model_dump(),
+            {k: v for k, v in self.overrides.items() if k != "base_disabled"},
+        )
+        base_disabled = self.overrides.get("base_disabled")
+        if isinstance(base_disabled, list):
+            merged["disabled_tools"] = list({
+                *base_disabled,
+                *merged.get("disabled_tools", []),
+            })
+
         return VC.model_validate(merged)
 
     @classmethod
@@ -92,6 +102,7 @@ DEFAULT = AgentProfile(
     "Default",
     "Requires approval for tool executions",
     AgentSafety.NEUTRAL,
+    overrides={"base_disabled": ["exit_plan_mode"]},
 )
 PLAN = AgentProfile(
     BuiltinAgentName.PLAN,
@@ -113,10 +124,11 @@ ACCEPT_EDITS = AgentProfile(
     "Auto-approves file edits only",
     AgentSafety.DESTRUCTIVE,
     overrides={
+        "base_disabled": ["exit_plan_mode"],
         "tools": {
             "write_file": {"permission": "always"},
             "search_replace": {"permission": "always"},
-        }
+        },
     },
 )
 AUTO_APPROVE = AgentProfile(
@@ -124,7 +136,7 @@ AUTO_APPROVE = AgentProfile(
     "Auto Approve",
     "Auto-approves all tool executions",
     AgentSafety.YOLO,
-    overrides={"auto_approve": True},
+    overrides={"auto_approve": True, "base_disabled": ["exit_plan_mode"]},
 )
 
 EXPLORE = AgentProfile(
@@ -151,8 +163,7 @@ LEAN = AgentProfile(
                 "name": "mistral-testing",
                 "api_base": "https://api.mistral.ai/v1",
                 "api_key_env_var": "MISTRAL_API_KEY",
-                "api_style": "reasoning",
-                "backend": "generic",
+                "backend": "mistral",
             }
         ],
         "models": [
@@ -166,13 +177,14 @@ LEAN = AgentProfile(
             }
         ],
         "compaction_model": {
-            "name": "mistral-vibe-cli-latest",
+            "name": "mistral-small-latest",
             "provider": "mistral-testing",
             "alias": "devstral-compact",
             "temperature": 0.2,
             "thinking": "off",
         },
         "tools": {"bash": {"default_timeout": 1200}},
+        "base_disabled": ["exit_plan_mode"],
     },
 )
 

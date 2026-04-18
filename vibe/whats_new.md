@@ -1,4 +1,4 @@
-# What's new in v2.5.0
-- **Lean mode**: Setup a dedicated theorem proving agent powered by leanstral with /leanstall
-- **Parallel tool execution**: Parallel tool calls are sped up by being ran at the same time
-- **Voice mode**: Real-time transcription support with /voice
+# What's new in v2.7.5
+
+- **Trust dialog**: Display detected files and LLM risks in the trust folder dialog
+- **Faster startup**: Deferred MCP and git I/O to a background thread for faster CLI startup

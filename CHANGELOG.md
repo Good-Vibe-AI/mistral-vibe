@@ -5,6 +5,165 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.7.5] - 2026-04-14
+
+### Changed
+
+- Display detected files and LLM risks in trust folder dialog
+- Text-to-speech via the Mistral SDK with telemetry tracking
+- Deferred MCP and git I/O to background thread for faster CLI startup
+- Made telemetry URL configurable
+- Bumped Textual to 8.2.1
+
+### Fixed
+
+- Encoding detection fallback in `read_safe` for non-UTF-8 files
+- Config saving logic cleanup
+
+
+## [2.7.4] - 2026-04-09
+
+### Added
+
+- Console View for enhanced debugging and monitoring
+- `/mcp` command to display MCP servers and their status
+- Manual command output forwarding to agent context
+
+### Changed
+
+- Improved web_fetch content truncation for better readability
+- Lazily load heavy dependencies to improve startup time
+- Optimized folder parsing at startup using scandir
+- Include file name in search_replace result display
+
+### Fixed
+
+- Stale configurations from subagent switch
+- ValueError on OTEL context detach in agent_span
+- Clipboard toast preview replaced with fixed text
+- Only agents with type "agent" are loadable with --agent flag
+- Made chat_url nullable in ChatAssistantPublicData
+- Normalized OTEL span exporter endpoint
+- Removed redundant permission prompts for parallel tool calls needing the same permission
+- Removed bottom margin issue in UI
+- Never crash before ACP server starts
+- Use skill in recent commands via the up-arrow navigation
+- Fixed loading order issues in vibe initialization
+
+
+## [2.7.3] - 2026-04-03
+
+### Added
+
+- `/data-retention` slash command to view Mistral AI's data retention notice and privacy settings
+
+
+## [2.7.2] - 2026-04-01
+
+### Added
+
+- Alt+Left / Alt+Right keyboard shortcuts for word-wise cursor movement in chat input
+
+### Changed
+
+- Refactored narrator into a dedicated narrator manager
+
+### Fixed
+
+- Broken build on Linux
+- Errored MCP servers are now excluded from the banner count
+- Improved bash denylist matching and error messages
+- Command messages are now skipped during rewind navigation
+
+
+## [2.7.1] - 2026-03-31
+
+### Added
+
+- ACP message-id support for reliable message boundary identification
+- Reasoning effort parameter for supported models
+
+### Changed
+
+- Updated MistralAI SDK
+- Updated ACP SDK dependency
+- Refined system prompt wording and structure
+- Reduced scroll sensitivity to 1 line per tick for smoother scrolling
+
+### Fixed
+
+- Non-standard HTTP 529 status codes now handled gracefully in error formatting and retried
+- Text selection errors when copying from unmounting components
+- Excluded "injected" field from user messages in generic backend
+
+
+## [2.7.0] - 2026-03-24
+
+### Added
+
+- Rewind mode to navigate and fork conversation history
+
+### Fixed
+
+- Preserve message_id when aggregating streaming LLM chunks
+- Improved error handling for SDK response errors
+
+
+## [2.6.2] - 2026-03-23
+
+### Changed
+
+- Pinned agent-client-protocol dependency back to 0.8.1
+
+### Removed
+
+- Context usage updates via ACP
+
+
+## [2.6.1] - 2026-03-23
+
+### Changed
+
+- Loosened agent-client-protocol version constraint from pinned to minimum bound
+
+
+## [2.6.0] - 2026-03-23
+
+### Added
+
+- OTEL tracing support for observability
+- Skill tool for managing task lists and workflows
+- Text-to-speech (TTS) functionality
+- Standalone --resume command for session picker
+- BFS for vibe folders to improve startup performance
+- List-based model picker for /model command
+- is_user_prompt flag to Mistral metadata header
+- Correlation ID in user feedback calls
+- Current date added to system prompt in vibe-work
+- TypeScript type inference for large tool outputs in vibe-work-harness
+
+### Changed
+
+- Updated agent-client-protocol to 0.9.0a1
+- Changed inline code color from yellow to green
+- Removed "You have no internet access" from CLI prompt
+- Fine-grained permission system improvements
+- Inject system certs into vibe-acp frozen binary via truststore
+
+### Fixed
+
+- Streaming for currently streamed message when switching agents
+- Proper UI updates when tools switch current agents
+- Space key functionality when holding shift
+- Empty TextChunk not appended when reasoning has no text content
+- Messages removed from user feedback event
+- Bash allowlist/denylist activation on Windows
+- Improved scrolling performance
+- ACP error handling in webview
+- Context usage updates sent via ACP
+- Include `exit_plan_mode` tool only in plan mode
+
+
 ## [2.5.0] - 2026-03-16
 
 ### Added

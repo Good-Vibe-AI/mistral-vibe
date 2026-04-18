@@ -31,6 +31,8 @@ class ChatTextArea(TextArea):
             show=False,
             priority=True,
         ),
+        Binding("alt+left", "cursor_word_left", "Cursor word left", show=False),
+        Binding("alt+right", "cursor_word_right", "Cursor word right", show=False),
         Binding("ctrl+g", "open_external_editor", "External Editor", show=False),
     ]
 
@@ -161,6 +163,16 @@ class ChatTextArea(TextArea):
         self.post_message(self.HistoryNext())
         return True
 
+    class FeedbackKeyPressed(Message):
+        def __init__(self, rating: int) -> None:
+            self.rating = rating
+            super().__init__()
+
+    class NonFeedbackKeyPressed(Message):
+        pass
+
+    feedback_active: bool = False
+
     async def _handle_voice_key(self, event: events.Key) -> bool:
         if not self._voice_manager:
             return False
@@ -192,6 +204,15 @@ class ChatTextArea(TextArea):
             return
 
         self._mark_cursor_moved_if_needed()
+
+        if self.feedback_active:
+            if event.character in {"1", "2", "3"}:
+                event.prevent_default()
+                event.stop()
+                self.post_message(self.FeedbackKeyPressed(int(event.character)))
+                return
+            if event.character is not None:
+                self.post_message(self.NonFeedbackKeyPressed())
 
         manager = self._completion_manager
         if manager:
